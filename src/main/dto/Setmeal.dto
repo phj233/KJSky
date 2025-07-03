@@ -1,0 +1,51 @@
+export top.phj233.kjsky.model.Setmeal
+    -> package top.phj233.kjsky.module.dto
+
+SetmealVO{
+    #allScalars
+    flat(category){
+        id as categoryId
+        name as categoryName
+    }
+    setmealDishes{
+        #allScalars
+    }
+}
+SetmealOverViewVO{
+    sold: Int
+    discontinued: Int
+}
+
+input SetmealDTO {
+    dynamic id
+    categoryId
+    name
+    price
+    status
+    dynamic description
+    image
+    setmealDishes{
+        dynamic id
+        copies
+        dishId
+        name
+        price
+        dynamic setmealId?
+    }
+}
+
+
+input SetmealPageQueryDTO {
+    dynamic categoryId?
+    dynamic name?
+    dynamic status
+    page: Int
+    pageSize: Int
+}
+
+input SetmealQueryDTO{
+    dynamic name?
+    dynamic status
+    dynamic categoryId?
+}
+

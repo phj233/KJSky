@@ -1,0 +1,37 @@
+export top.phj233.kjsky.model.Employee
+    -> package top.phj233.kjsky.model.dto
+
+input EmployeeDTO {
+    dynamic id
+    name
+    username
+    password
+    phone
+    sex
+    idNumber
+}
+
+
+input EmployeeLoginDTO {
+    username
+    password
+}
+
+
+input EmployeePageQueryDTO {
+    dynamic name?
+    page: Int
+    pageSize: Int
+}
+
+EmployeeLoginVO{
+    id
+    username as userName
+    name
+    token: String
+}
+EmployeeVO{
+    #allScalars
+    -password
+}
+

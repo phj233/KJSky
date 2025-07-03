@@ -1,0 +1,12 @@
+export top.phj233.kjsky.model.SetmealDish
+    -> package top.phj233.kjsky.model.dto
+
+DishItemVO {
+    name
+    copies
+    flat(dish){
+        image
+        description
+    }
+}
+

@@ -1,0 +1,48 @@
+export top.phj233.kjsky.model.Dish
+    -> package top.phj233.kjsky.module.dto
+
+
+input DishPageQueryDTO{
+    dynamic name?
+    page: Int
+    pageSize: Int
+    dynamic status
+    dynamic categoryId?
+}
+
+input DishQueryDTO{
+    dynamic name?
+    dynamic status
+    dynamic categoryId?
+}
+
+input DishDTO{
+    id
+    name
+    image
+    description
+    price
+    status
+    categoryId
+    flavors{
+        dynamic dishId?
+        dynamic id?
+        name
+        value
+    }
+}
+DishVO{
+    #allScalars
+    flat(category){
+        id as categoryId
+        name as categoryName
+    }
+    flavors{
+        #allScalars
+    }
+}
+DishOverViewVO {
+    sold: Int
+    discontinued: Int
+}
+

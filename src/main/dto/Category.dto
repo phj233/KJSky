@@ -1,0 +1,20 @@
+export top.phj233.kjsky.model.Category
+    -> package top.phj233.kjsky.model.dto
+
+input CategoryPageQueryDTO {
+    dynamic name?
+    dynamic type
+    page: Int
+    pageSize: Int
+}
+
+
+input CategoryDTO {
+    id
+    type
+    name
+    sort
+    dynamic status
+}
+
+

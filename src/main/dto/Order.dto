@@ -1,0 +1,137 @@
+export top.phj233.kjsky.model.Order
+    -> package top.phj233.kjsky.model.dto
+import java.time.LocalDateTime
+import org.springframework.format.annotation.DateTimeFormat
+import java.math.BigDecimal
+
+input GoodsSalesDTO {
+    name: String
+    number: Int
+}
+
+input OrdersConfirmDTO {
+    id
+    status
+}
+
+input OrdersDTO {
+    id
+    number
+    status
+    userId
+    addressBookId
+    orderTime
+    checkoutTime
+    payMethod
+    payStatus
+    amount
+    remark
+    phone
+    address
+    userName
+    consignee
+    cancelReason
+    rejectionReason
+    cancelTime
+    estimatedDeliveryTime
+    deliveryStatus
+    deliveryTime
+    packAmount
+    tablewareNumber
+    tablewareStatus
+}
+
+input OrdersSubmitDTO {
+    addressBookId
+    payMethod
+    amount
+    remark
+    estimatedDeliveryTime
+    deliveryStatus
+    packAmount
+    tablewareNumber
+    tablewareStatus
+}
+
+
+input OrdersCancelDTO {
+    id
+    cancelReason
+}
+
+
+specification OrdersPageQueryDTO {
+    userId
+    page: Int
+    pageSize: Int
+    number
+    status
+    phone
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    beginTime: LocalDateTime
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    endTime: LocalDateTime
+}
+
+
+input OrdersPaymentDTO {
+    payMethod
+    orderNumber: String
+}
+
+
+input OrdersRejectionDTO {
+    id
+    rejectionReason
+}
+
+OrderSubmitVO{
+    id
+    orderTime
+    number as orderNumber
+    amount as orderAmount
+}
+
+OrderOverViewVO{
+    //待接单数
+    waitingOrders: Int
+    deliveredOrders: Int
+    completedOrders: Int
+    cancelledOrders: Int
+    allOrders: Int
+}
+
+OrderPaymentVO{
+    nonceStr: String
+    paySign: String
+    timeStamp: String
+    signType: String
+    packageStr: String
+}
+
+OrderReportVO{
+    dateList: List<String>
+    orderCountList: List<String>
+    validOrderCountList: List<String>
+    totalOrderCount: Int
+    validOrderCount: Int
+    orderCompletionRate: Double
+}
+
+OrderStatisticsVO{
+    //待接单数
+    toBeConfirmed: Long
+    //待派送数
+    confirmed: Long
+    //派送中数量
+    deliveryInProgress: Long
+}
+
+OrderVO{
+    #allScalars
+    orderDishes: String
+    orderDetail{
+        #allScalars
+        #allReferences
+    }
+}
