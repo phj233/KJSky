@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: KJSky
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/kjsky?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: phj123456
+  data:
+    redis:
+      database: 10
+      connect-timeout: 3000
+      timeout: 3000
+      host: home.phj233.top
+
+sa-token:
+  jwt-secret-key: kjskyPhj233
+  is-color-log: true
+  timeout: 6048000
+  token-name: token
+jimmer:
+  language: kotlin
+  dialect: org.babyfish.jimmer.sql.dialect.MySqlDialect
+  show-sql: true
+  pretty-sql: true
+kjsky:
+  minio:
+    access-key: nGqqe7ceK5f3EQrZnpuK
+    secret-key: 0CPNyzhhHtlM91LIv16pz3wVSyORvITDivjubQNH
+    bucket-name: kjsky
+
