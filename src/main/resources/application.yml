@@ -9,6 +9,8 @@ spring:
     password: phj123456
   data:
     redis:
+      repositories:
+        enabled: false
       database: 10
       connect-timeout: 3000
       timeout: 3000

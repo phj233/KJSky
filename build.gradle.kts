@@ -43,6 +43,8 @@ dependencies {
     implementation("com.github.wechatpay-apiv3:wechatpay-java:0.2.17")
     // Minio
     implementation("io.minio:minio:8.5.17")
+    // pio
+    implementation("org.apache.poi:poi:5.4.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("com.mysql:mysql-connector-j")
