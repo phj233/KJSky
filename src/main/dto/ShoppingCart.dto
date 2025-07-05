@@ -1,0 +1,9 @@
+export top.phj233.kjsky.model.ShoppingCart
+    -> package top.phj233.kjsky.model.dto
+
+specification ShoppingCartDTO {
+    dishId
+    setmealId
+    dishFlavor
+}
+

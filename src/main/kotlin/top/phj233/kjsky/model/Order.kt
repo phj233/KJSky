@@ -8,6 +8,7 @@ import java.time.LocalDateTime
  * 订单表
  */
 @Entity
+@Table(name = "orders")
 interface Order {
 
     /**
@@ -22,6 +23,7 @@ interface Order {
     /**
      * 订单号
      */
+    @Key
     val number: String?
 
     /**
@@ -150,7 +152,7 @@ interface Order {
     @OnDissociate(DissociateAction.DELETE)
     val addressBook: AddressBook
 
-    @OneToMany(mappedBy = "orders")
+    @OneToMany(mappedBy = "order")
     val orderDetail: List<OrderDetail>
 }
 

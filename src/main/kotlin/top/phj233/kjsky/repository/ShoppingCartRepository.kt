@@ -1,5 +1,6 @@
 package top.phj233.kjsky.repository
 
+import org.babyfish.jimmer.spring.repository.DynamicParam
 import org.babyfish.jimmer.spring.repository.KRepository
 import top.phj233.kjsky.model.ShoppingCart
 
@@ -11,5 +12,12 @@ import top.phj233.kjsky.model.ShoppingCart
  */
 interface ShoppingCartRepository: KRepository<ShoppingCart, Long> {
     fun findByUserId(userId: Long): List<ShoppingCart>
-    fun deleteAllByUserId(userId: Long)
+    fun deleteByUserId(userId: Long)
+
+    fun findShoppingCartByUserIdOrDishIdOrSetmealIdOrDishFlavor(
+        @DynamicParam userId: Long? = null,
+        @DynamicParam dishId: Long? = null,
+        @DynamicParam setmealId: Long? = null,
+        @DynamicParam dishFlavor: String? = null
+    ): List<ShoppingCart>?
 }

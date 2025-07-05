@@ -1,9 +1,6 @@
 package top.phj233.kjsky.model
 
-import org.babyfish.jimmer.sql.Entity
-import org.babyfish.jimmer.sql.GeneratedValue
-import org.babyfish.jimmer.sql.GenerationType
-import org.babyfish.jimmer.sql.Id
+import org.babyfish.jimmer.sql.*
 
 /**
  * 用户信息
@@ -23,6 +20,7 @@ interface User : CreateTimeBase {
     /**
      * 微信用户唯一标识
      */
+    @Key
     val openid: String?
 
     /**

@@ -68,9 +68,9 @@ specification OrdersPageQueryDTO {
     status
     phone
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    beginTime: LocalDateTime
+    beginTime: LocalDateTime?
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    endTime: LocalDateTime
+    endTime: LocalDateTime?
 }
 
 
@@ -110,9 +110,9 @@ OrderPaymentVO{
 }
 
 OrderReportVO{
-    dateList: List<String>
-    orderCountList: List<String>
-    validOrderCountList: List<String>
+    dateList: String
+    orderCountList: String
+    validOrderCountList: String
     totalOrderCount: Int
     validOrderCount: Int
     orderCompletionRate: Double
@@ -134,4 +134,19 @@ OrderVO{
         #allScalars
         #allReferences
     }
+}
+BusinessDataVO{
+    turnover: Double
+    validOrderCount: Int
+    orderCompletionRate: Double
+    unitPrice: Double
+    newUsers: Int
+}
+TurnoverReportVO{
+    dateList: String
+    turnoverList: String
+}
+SalesTop10ReportVO{
+    nameList: String
+    numberList: String
 }

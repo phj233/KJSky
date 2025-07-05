@@ -1,5 +1,6 @@
 package top.phj233.kjsky.repository
 
+import org.babyfish.jimmer.spring.repository.DynamicParam
 import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.springframework.data.domain.Page
@@ -17,7 +18,9 @@ import top.phj233.kjsky.model.status
  */
 @Repository
 interface CategoryRepository: KRepository<Category, Long> {
-    fun findByNameLikeAndType(name: String?, type: Int?, of: PageRequest): Page<Category>
+    fun findByNameLikeAndType(
+        @DynamicParam name: String?,
+        @DynamicParam type: Int?, of: PageRequest): Page<Category>
     fun findCategoryById(id: Long): Category
     fun findCategoriesByType(type: Int?): List<Category>
     fun updateCategoryStatusById(id: Long, status: Int): Int = sql.createUpdate(Category::class){

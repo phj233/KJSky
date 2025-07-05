@@ -1,0 +1,19 @@
+export top.phj233.kjsky.model.User
+    -> package top.phj233.kjsky.model.dto
+
+UserReportVO {
+    newUserList:String
+    totalUserList:String
+    dateList:String
+}
+
+input UserLoginDTO{
+    code:String
+}
+
+UserLoginVO{
+    id
+    openid
+    token : String
+}
+

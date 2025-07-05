@@ -22,5 +22,5 @@ interface SetmealDishRepository: KRepository<SetmealDish, Long> {
     }.execute()
 
     fun <V: View<SetmealDish>> findBySetmealId(setmealId: Long,view: KClass<V>): List<V>
-    fun findBySetmealId(setmealId: Long): List<SetmealDish>
+    fun  findBySetmealId(setmealId: Long): List<SetmealDish>
 }

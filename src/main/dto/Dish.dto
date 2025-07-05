@@ -2,12 +2,12 @@ export top.phj233.kjsky.model.Dish
     -> package top.phj233.kjsky.module.dto
 
 
-input DishPageQueryDTO{
-    dynamic name?
+specification DishPageQueryDTO{
+    name
     page: Int
     pageSize: Int
-    dynamic status
-    dynamic categoryId?
+    status
+    categoryId
 }
 
 input DishQueryDTO{

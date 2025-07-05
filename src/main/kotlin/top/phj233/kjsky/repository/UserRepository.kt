@@ -10,4 +10,6 @@ import top.phj233.kjsky.model.User
  * @version
  */
 interface UserRepository: KRepository<User, Long> {
+    fun countByCreateTimeBetween(beginTime: java.time.LocalDateTime, endTime: java.time.LocalDateTime) : Int
+    fun findByOpenid(openId: String): User?
 }

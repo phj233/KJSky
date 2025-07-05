@@ -84,6 +84,7 @@ interface AddressBook {
     val default: Boolean
 
     @ManyToOne
+    @OnDissociate( DissociateAction.DELETE)
     val user: User
 }
 

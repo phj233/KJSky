@@ -5,7 +5,7 @@ input EmployeeDTO {
     dynamic id
     name
     username
-    password
+    password?
     phone
     sex
     idNumber

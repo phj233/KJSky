@@ -65,18 +65,21 @@ interface ShoppingCart : CreateTimeBase{
      * 用户
      */
     @ManyToOne
+    @OnDissociate(DissociateAction.DELETE)
     val user: User
 
     /**
      * 菜品
      */
     @ManyToOne
+    @OnDissociate(DissociateAction.SET_NULL)
     val dish: Dish?
 
     /**
      * 套餐
      */
     @ManyToOne
+    @OnDissociate(DissociateAction.SET_NULL)
     val setmeal: Setmeal?
 
 }

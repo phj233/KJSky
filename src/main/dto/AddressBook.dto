@@ -1,2 +1,10 @@
 export top.phj233.kjsky.model.AddressBook
+    -> package top.phj233.kjsky.model.dto
+
+input AddressBookQueryDTO {
+    userId?
+    phone?
+    default?
+}
+
 

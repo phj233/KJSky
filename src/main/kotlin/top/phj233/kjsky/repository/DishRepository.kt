@@ -38,4 +38,5 @@ interface DishRepository: KRepository<Dish, Long> {
         categoryId: Long,
         @DynamicParam status: Int, view: KClass<V>): List<V>
 
+    fun countByStatus(status: Int): Long
 }

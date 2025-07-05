@@ -18,10 +18,11 @@ import kotlin.reflect.KClass
  * @version
  */
 interface SetmealRepository: KRepository<Setmeal, Long> {
-    fun findByNameLikeAndCategoryIdAndStatus(
+    fun <V: View<Setmeal>> findByNameLikeAndCategoryIdAndStatus(
         @DynamicParam name: String?,
         @DynamicParam categoryId: Long?,
-        @DynamicParam status: Int?, of: PageRequest): Page<Setmeal>
+        @DynamicParam status: Int?,view: KClass<V>, of: PageRequest): Page<V>
+
     fun <V: View<Setmeal>> findByNameLikeAndCategoryIdAndStatus(
         @DynamicParam name: String?,
         @DynamicParam categoryId: Long?,
@@ -36,6 +37,8 @@ interface SetmealRepository: KRepository<Setmeal, Long> {
         where(table.id eq id)
         set(table.status, status)
     }.execute()
+
+    fun findSetmealById(setmealId: Long) : Setmeal
 
 
 }

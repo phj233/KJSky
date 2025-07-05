@@ -7,6 +7,7 @@ import java.math.BigDecimal
  * 订单明细表
  */
 @Entity
+@Table(name = "order_detail")
 interface OrderDetail {
 
     /**
@@ -31,7 +32,7 @@ interface OrderDetail {
     /**
      * 订单id
      */
-    @IdView("orders")
+    @IdView
     val orderId: Long
 
     /**
@@ -65,7 +66,7 @@ interface OrderDetail {
      * 订单
      */
     @ManyToOne
-    val orders: Order
+    val order: Order
 
     /**
      * 菜品
