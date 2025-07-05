@@ -37,10 +37,14 @@ dependencies {
     implementation("com.alibaba:druid-spring-boot-starter:1.2.25")
     // sa-token
     implementation("cn.dev33:sa-token-spring-boot3-starter:1.44.0")
+    // sa-token集成redis
+    implementation("cn.dev33:sa-token-redis-template:1.44.0")
+    implementation("org.apache.commons:commons-pool2")
     implementation("cn.dev33:sa-token-jwt:1.44.0")
     implementation ("cn.hutool:hutool-all:5.8.26")
     // WeChatPay
     implementation("com.github.wechatpay-apiv3:wechatpay-java:0.2.17")
+
     // Minio
     implementation("io.minio:minio:8.5.17")
     // pio

@@ -4,10 +4,14 @@ import cn.dev33.satoken.`fun`.SaFunction
 import cn.dev33.satoken.interceptor.SaInterceptor
 import cn.dev33.satoken.jwt.StpLogicJwtForSimple
 import cn.dev33.satoken.router.SaRouter
+import cn.dev33.satoken.stp.StpInterface
 import cn.dev33.satoken.stp.StpLogic
 import cn.dev33.satoken.stp.StpUtil
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
@@ -28,20 +32,13 @@ class SaTokenConfigure : WebMvcConfigurer{
         registry.addInterceptor(SaInterceptor{
             SaRouter.match("/**").notMatch(
                 "/admin/employee/login",
-                "/admin/employee/save",
                 "/openapi.html",
                 "/openapi.yml",
                 "/ts.zip")
                 .check(SaFunction {
                     StpUtil.checkLogin()
                 })
-        }).addPathPatterns("/**").excludePathPatterns(
-            "/admin/employee/login",
-            "/admin/employee/save",
-            "/openapi.html",
-            "/openapi.yml",
-            "/ts.zip"
-        )
+        })
     }
 
     @Bean
@@ -58,4 +55,27 @@ class SaTokenConfigure : WebMvcConfigurer{
             addAllowedHeader("*") // 允许的请求头类型
         })
     })
+}
+
+@Component
+class StpInterFaceImpl: StpInterface{
+    val logger: Logger = LoggerFactory.getLogger(this::class.java)
+    override fun getPermissionList(
+        loginId: Any?,
+        loginType: String?
+    ): List<String?>? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getRoleList(
+        loginId: Any?,
+        loginType: String?
+    ): List<String?>? {
+        logger.info("""
+            -----已进入 StpInterFaceImpl.getRoleList 方法-----
+            loginId: $loginId - loginType: $loginType
+             tokenInfo： ${StpUtil.getTokenInfo()}
+            """.trimIndent())
+        return listOf(StpUtil.getExtra("role").toString())
+    }
 }

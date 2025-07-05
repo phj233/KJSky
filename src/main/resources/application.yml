@@ -31,4 +31,7 @@ kjsky:
     access-key: nGqqe7ceK5f3EQrZnpuK
     secret-key: 0CPNyzhhHtlM91LIv16pz3wVSyORvITDivjubQNH
     bucket-name: kjsky
+  we-chat:
+    appid: wx66821814e2806052
+    secret: b0dc03f770685a76e25d619df76e012e
 
