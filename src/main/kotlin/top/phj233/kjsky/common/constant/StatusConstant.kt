@@ -11,7 +11,7 @@ object StatusConstant {
     const val DISABLE: Int = 0
 
     //店铺状态
-    const val KEY: String = "SHOP_STATUS"
+    const val SHOP_STATUS_KEY: String = "SHOP_STATUS"
 
     /**
      * 订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消

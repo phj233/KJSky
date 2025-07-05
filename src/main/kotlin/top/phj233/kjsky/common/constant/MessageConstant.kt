@@ -4,6 +4,8 @@ package top.phj233.kjsky.common.constant
  * 信息提示常量类
  */
 object MessageConstant {
+    const val ADDRESS_NOT_FOUND: String = "地址不存在"
+    const val ACCOUNT_DISABLED: String = "账号已被禁用"
     const val SETMEAL_NOT_FOUND: String = "套餐不存在"
     const val CATEGORY_NOT_FOUND: String = "分类不存在"
     const val SUCCESS: String = "操作成功"
