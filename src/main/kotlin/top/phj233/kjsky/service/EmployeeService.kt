@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import top.phj233.kjsky.common.constant.JwtClaimsConstant
 import top.phj233.kjsky.common.constant.MessageConstant
+import top.phj233.kjsky.common.constant.StatusConstant
 import top.phj233.kjsky.common.exception.AccountNotFoundException
 import top.phj233.kjsky.common.exception.LoginFailedException
 import top.phj233.kjsky.model.copy
@@ -33,8 +34,11 @@ class EmployeeService(val employeeRepository: EmployeeRepository) {
             if(it == null){
                 throw LoginFailedException(MessageConstant.ACCOUNT_NOT_FOUND)
             }
+            if (it.status == StatusConstant.DISABLE) throw LoginFailedException(MessageConstant.ACCOUNT_DISABLED)
             if(BCrypt.checkpw(employeeLoginDTO.password, it.password)){
-                StpUtil.login(it.id, SaLoginParameter().setExtra(JwtClaimsConstant.EMP_ID, it.id).setExtra(JwtClaimsConstant.EMP_ID, it.name))
+                StpUtil.login(it.id, SaLoginParameter()
+                    .setExtra(JwtClaimsConstant.EMP_ID, it.id)
+                    .setExtra(JwtClaimsConstant.ROLE, JwtClaimsConstant.EMPLOYEE))
                 return employeeRepository.viewer(EmployeeLoginVO::class).findNullable(it.id)!!.copy(
                     token = StpUtil.getTokenValue()
                 )
@@ -102,7 +106,7 @@ class EmployeeService(val employeeRepository: EmployeeRepository) {
      */
     fun updateEmployee(employeeDTO: EmployeeDTO): EmployeeVO {
         employeeRepository.save(employeeDTO.let {
-            if(!it.password.isEmpty()){
+            if(!it.password.isNullOrBlank()) {
                 it.copy(password = BCrypt.hashpw(it.password))
             } else {
                 it

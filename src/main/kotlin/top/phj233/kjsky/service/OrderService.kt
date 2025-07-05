@@ -90,7 +90,7 @@ class OrderService(
             orderDetailRepository.save(orderDetail)
         }
         // 5. 清空购物车
-        shoppingCartRepository.deleteAllByUserId(orderUserId)
+        shoppingCartRepository.deleteByUserId(orderUserId)
         // 6. 封装OrderSubmitVO
         logger.info("订单提交成功: $order")
         return OrderSubmitVO(
@@ -114,7 +114,7 @@ class OrderService(
          * 1.根据 userId 查询 用户 openId
          * 2.调用微信支付统一下单接口
          */
-        val order = orderRepository.findOrderByNumber(ordersPaymentDTO.orderNumber)
+        val order = orderRepository.findByNumber(ordersPaymentDTO.orderNumber)
         val res: JsonNode = ObjectMapper().readTree("fake response from WeChat Pay API")
         res.get("code").equals("ORDERPAID").takeIf { it } ?: run {
             throw OrderBusinessException("订单已支付")
@@ -134,14 +134,14 @@ class OrderService(
      * @param outTradeNo 商户订单号
      * @return Boolean 是否更新成功
      */
-    fun updateOrderStatus(outTradeNo: String): Boolean {
+    fun paySuccess(outTradeNo: String): Boolean {
         // 1. 根据商户订单号 和 用户Id查询订单
-        orderRepository.findOrderByNumberAndUserId(outTradeNo, StpUtil.getLoginIdAsLong()).copy {
+        orderRepository.findOrderByNumberAndUserId( outTradeNo,StpUtil.getLoginIdAsLong()).copy {
             logger.info("订单状态更新前: $this")
             this.status = StatusConstant.TO_BE_CONFIRMED
             this.payStatus = StatusConstant.PAID
             this.checkoutTime = LocalDateTime.now()
-    }.apply {
+        }.apply {
         logger.info("订单状态更新后: $this")
             // 2. 更新订单状态
             orderRepository.save(this)
@@ -190,7 +190,7 @@ class OrderService(
      */
     fun cancelOrder(orderId: Long): Boolean {
         logger.info("用户取消订单: orderId=$orderId")
-        val order = orderRepository.findOrderById(orderId) ?: throw OrderBusinessException(MessageConstant.ORDER_NOT_FOUND)
+        val order = orderRepository.findNullable(orderId) ?: throw OrderBusinessException(MessageConstant.ORDER_NOT_FOUND)
         val ordersDTO = OrdersDTO(order)
         if (order.status > 2){
             throw OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR)
@@ -249,7 +249,7 @@ class OrderService(
         logger.info("订单分页查询: $ordersPageQueryDTO")
         // 1. 查询订单
         val orderVO =
-            orderRepository.findByUserIdOrStatusOrNumberOrPhoneOrOrderTimeAfterOrOrderTimeBefore(
+            orderRepository.findByUserIdLikeOrStatusIsOrNumberLikeOrPhoneLikeOrOrderTimeBetween(
                 ordersPageQueryDTO.userId,
                 ordersPageQueryDTO.status,
                 ordersPageQueryDTO.number,
@@ -276,9 +276,9 @@ class OrderService(
      */
     fun countOrderStatus(): OrderStatisticsVO {
         logger.info("统计各个状态的订单数量")
-        val toBeConfirmed = orderRepository.countOrderByStatus(StatusConstant.TO_BE_CONFIRMED)
-        val confirmed = orderRepository.countOrderByStatus(StatusConstant.CONFIRMED)
-        val deliveryInProgress = orderRepository.countOrderByStatus(StatusConstant.DELIVERY_IN_PROGRESS)
+        val toBeConfirmed = orderRepository.countByStatusEquals(StatusConstant.TO_BE_CONFIRMED)
+        val confirmed = orderRepository.countByStatusEquals(StatusConstant.CONFIRMED)
+        val deliveryInProgress = orderRepository.countByStatusEquals(StatusConstant.DELIVERY_IN_PROGRESS)
         return OrderStatisticsVO(
             confirmed = toBeConfirmed,
             toBeConfirmed = confirmed,
@@ -318,7 +318,7 @@ class OrderService(
     }
 
     private fun handleOrderCancellation(orderId: Long, reason: String, isRejection: Boolean): Boolean {
-        val order = orderRepository.findOrderById(orderId)
+        val order = orderRepository.findNullable(orderId)
             ?: throw OrderBusinessException(MessageConstant.ORDER_NOT_FOUND).also {
                 logger.error("订单不存在: id=$orderId")
             }
@@ -353,7 +353,7 @@ class OrderService(
      */
     fun deliveryOrder(id: Long): Boolean {
         logger.info("派送订单: id=$id")
-        val order = orderRepository.findOrderById(id)
+        val order = orderRepository.findNullable(id)
             ?: throw OrderBusinessException(MessageConstant.ORDER_NOT_FOUND)
         if (order.status != StatusConstant.CONFIRMED) {
             throw OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR)
@@ -372,7 +372,7 @@ class OrderService(
      */
     fun completeOrder(id: Long): Boolean {
         logger.info("完成订单: id=$id")
-        val order = orderRepository.findOrderById(id)
+        val order = orderRepository.findNullable(id)
             ?: throw OrderBusinessException(MessageConstant.ORDER_NOT_FOUND)
         if (order.status != StatusConstant.DELIVERY_IN_PROGRESS) {
             throw OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR)
@@ -392,8 +392,9 @@ class OrderService(
      */
     fun urgeOrder(id: Long): Boolean {
         logger.info("客户催单: id=$id")
-        val order = orderRepository.findOrderById(id)
+        val order = orderRepository.findNullable(id)
             ?: throw OrderBusinessException(MessageConstant.ORDER_NOT_FOUND)
+        // 检查订单状态是否为派送中 意思是 订单正在派送中才能催单
 //        if (order.status != StatusConstant.DELIVERY_IN_PROGRESS) {
 //            throw OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR)
 //        }

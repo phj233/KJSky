@@ -1,5 +1,6 @@
 package top.phj233.kjsky.controller.admin
 
+import cn.dev33.satoken.annotation.SaCheckRole
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -9,14 +10,15 @@ import top.phj233.kjsky.common.ResponseUtil
 import top.phj233.kjsky.service.MinioService
 
 /**
- * 公共控制器
+ * 管理端/公共控制器
  * @author phj233
  * @since 2025/7/1 19:35
  * @version
  */
 @RestController
 @RequestMapping("/admin/common")
-class CommonController(private val minioService: MinioService, service: MinioService) {
+@SaCheckRole("employee")
+class CommonController(private val minioService: MinioService) {
     /**
      * 文件上传接口
      * @param file MultipartFile 文件

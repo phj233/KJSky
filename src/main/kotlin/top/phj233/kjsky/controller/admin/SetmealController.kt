@@ -1,5 +1,6 @@
 package top.phj233.kjsky.controller.admin
 
+import cn.dev33.satoken.annotation.SaCheckRole
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
@@ -15,13 +16,14 @@ import top.phj233.kjsky.module.dto.SetmealVO
 import top.phj233.kjsky.service.SetmealService
 
 /**
- * 套餐控制器
+ * 管理端/套餐控制器
  * @author phj233
  * @since 2025/7/2 10:25
  * @version
  */
 @RestController
 @RequestMapping("/admin/setmeal")
+@SaCheckRole("employee")
 class SetmealController(val setmealService: SetmealService) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -32,7 +34,7 @@ class SetmealController(val setmealService: SetmealService) {
      */
     @PostMapping
     @CacheEvict(cacheNames = ["setmealCache"], key = "#setmealDTO.categoryId") //key: setmealCache::100
-    fun save( setmealDTO: SetmealDTO): ApiResponse<Setmeal> {
+    fun save(@RequestBody setmealDTO: SetmealDTO): ApiResponse<Setmeal> {
         logger.info("新增套餐: $setmealDTO")
         return ResponseUtil.success(setmealService.saveSetmeal(setmealDTO))
     }
@@ -40,10 +42,10 @@ class SetmealController(val setmealService: SetmealService) {
     /**
      * 套餐分页查询
      * @param setmealPageQueryDTO 套餐分页查询DTO
-     * @return ApiResponse<Page<Setmeal>> 分页查询结果
+     * @return ApiResponse<Page<SetmealVO>> 分页查询结果
      */
     @GetMapping("/page")
-    fun page(setmealPageQueryDTO: SetmealPageQueryDTO): ApiResponse<Page<Setmeal>> {
+    fun page(setmealPageQueryDTO: SetmealPageQueryDTO): ApiResponse<Page<SetmealVO>> {
         logger.info("套餐分页查询: $setmealPageQueryDTO")
         return ResponseUtil.success(setmealService.pageQuery(setmealPageQueryDTO))
     }
@@ -55,7 +57,7 @@ class SetmealController(val setmealService: SetmealService) {
      */
     @DeleteMapping
     @CacheEvict(cacheNames = ["setmealCache"], allEntries = true)
-    fun delete(ids: List<Long>): ApiResponse<String> {
+    fun delete(@RequestParam ids: List<Long>): ApiResponse<String> {
         logger.info("批量删除套餐，IDs: $ids")
         setmealService.deleteSetmeals(ids)
         return ResponseUtil.success(MessageConstant.SUCCESS)

@@ -1,5 +1,7 @@
 package top.phj233.kjsky.service
 
+import cn.dev33.satoken.stp.StpUtil
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.slf4j.Logger
@@ -33,7 +35,7 @@ class DishService(
     val stringRedisTemplate: StringRedisTemplate
 ) {
     val log: Logger = LoggerFactory.getLogger(DishService::class.java)
-
+    val objectMapper = ObjectMapper()
     /**
      * 菜品分页查询
      * @param dishPageQueryDTO 菜品分页查询DTO
@@ -159,5 +161,29 @@ class DishService(
             DishVO::class
         )
     }
+
+    fun findDishListFromCacheOrDB(categoryId: Long): List<DishVO> {
+        log.info("${StpUtil.getLoginIdAsLong()} 查询菜品列表，分类ID: $categoryId")
+        val cacheKey = "dish_$categoryId"
+        val cachedDishes = stringRedisTemplate.opsForValue().get(cacheKey)
+        if (cachedDishes != null) {
+            log.info("从缓存中获取菜品列表: $cachedDishes")
+            // 使用 Jackson 序列化库将json转换为 List<DishVO>
+            return objectMapper
+                .readValue(cachedDishes,
+                    objectMapper.typeFactory.constructCollectionType(List::class.java,
+                        DishVO::class.java)) as List<DishVO>
+        } else {
+            log.info("缓存未命中，查询数据库")
+            val dishes = findDishesByCategoryId(categoryId)
+            val dishesJson = objectMapper.writeValueAsString(dishes)
+            log.info("查询到菜品列表: $dishesJson")
+            // 将查询结果json存入缓存
+            stringRedisTemplate.opsForValue().set(cacheKey, dishesJson)
+            log.info("菜品列表已存入缓存: $cacheKey")
+            return dishes
+        }
+    }
+
 }
 

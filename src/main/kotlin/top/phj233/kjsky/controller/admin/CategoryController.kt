@@ -1,5 +1,6 @@
 package top.phj233.kjsky.controller.admin
 
+import cn.dev33.satoken.annotation.SaCheckRole
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.web.bind.annotation.*
@@ -11,13 +12,14 @@ import top.phj233.kjsky.model.dto.CategoryPageQueryDTO
 import top.phj233.kjsky.service.CategoryService
 
 /**
- * 分类控制器
+ * 管理端/分类控制器
  * @author phj233
  * @since 2025/7/1 19:44
  * @version
  */
 @RestController
 @RequestMapping("/admin/category")
+@SaCheckRole("employee")
 class CategoryController(val categoryService: CategoryService) {
 
     val logger = LoggerFactory.getLogger(this::class.java)
@@ -36,8 +38,8 @@ class CategoryController(val categoryService: CategoryService) {
      * @param categoryPageQueryDTO 分类分页查询DTO
      * @return ApiResponse<Page<Category>> 分页查询结果
      */
-    @PostMapping("/page")
-    fun pageQuery(@RequestBody categoryPageQueryDTO: CategoryPageQueryDTO): ApiResponse<Page<Category>> {
+    @GetMapping("/page")
+    fun pageQuery(categoryPageQueryDTO: CategoryPageQueryDTO): ApiResponse<Page<Category>> {
         return ResponseUtil.success(categoryService.pageQuery(categoryPageQueryDTO))
     }
 

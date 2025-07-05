@@ -1,5 +1,6 @@
 package top.phj233.kjsky.controller.admin
 
+import cn.dev33.satoken.annotation.SaCheckRole
 import cn.dev33.satoken.annotation.SaIgnore
 import cn.dev33.satoken.stp.StpUtil
 import org.springframework.data.domain.Page
@@ -11,13 +12,14 @@ import top.phj233.kjsky.model.dto.*
 import top.phj233.kjsky.service.EmployeeService
 
 /**
- * 员工管理控制器
+ * 管理端/员工控制器
  * @author phj233
  * @since 2025/6/30 23:25
  * @version
  */
 @RestController
 @RequestMapping("/admin/employee")
+@SaCheckRole("employee")
 class EmployeeController(val employeeService: EmployeeService) {
     /**
      * 员工登录
@@ -25,7 +27,7 @@ class EmployeeController(val employeeService: EmployeeService) {
      */
     @PostMapping("/login")
     @SaIgnore
-    fun login(employeeLoginDTO: EmployeeLoginDTO): ApiResponse<EmployeeLoginVO> {
+    fun login(@RequestBody employeeLoginDTO: EmployeeLoginDTO): ApiResponse<EmployeeLoginVO> {
         return ResponseUtil.success(employeeService.login(employeeLoginDTO))
     }
 
@@ -47,7 +49,7 @@ class EmployeeController(val employeeService: EmployeeService) {
      */
     @PostMapping
     @SaIgnore
-    fun save(employeeDTO: EmployeeDTO): ApiResponse<EmployeeVO> {
+    fun save(@RequestBody employeeDTO: EmployeeDTO): ApiResponse<EmployeeVO> {
         return ResponseUtil.success(employeeService.register(employeeDTO))
     }
 

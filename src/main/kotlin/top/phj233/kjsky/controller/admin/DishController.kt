@@ -1,7 +1,7 @@
 package top.phj233.kjsky.controller.admin
 
+import cn.dev33.satoken.annotation.SaCheckRole
 import org.springframework.data.domain.Page
-import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.web.bind.annotation.*
 import top.phj233.kjsky.common.ApiResponse
 import top.phj233.kjsky.common.ResponseUtil
@@ -12,14 +12,15 @@ import top.phj233.kjsky.module.dto.DishVO
 import top.phj233.kjsky.service.DishService
 
 /**
- * 菜品控制器
+ * 管理端/菜品控制器
  * @author phj233
  * @since 2025/6/30 19:54
  * @version
  */
 @RestController
 @RequestMapping("/admin/dish")
-class DishController(val dishService: DishService,val redisTemplate: StringRedisTemplate) {
+@SaCheckRole("employee")
+class DishController(val dishService: DishService) {
     /**
      * 菜品分页查询
      * @param dishPageQueryDTO 菜品分页查询DTO
@@ -77,8 +78,8 @@ class DishController(val dishService: DishService,val redisTemplate: StringRedis
      * @param status Int 菜品状态 1起售 0停售
      * @return ApiResponse<DishVO> 更新后的菜品视图对象
      */
-    @PostMapping("/status/{id}")
-    fun updateStatus(@PathVariable id: Long, @RequestParam status: Int): ApiResponse<DishVO> {
+    @PostMapping("/status/{status}")
+    fun updateStatus(id: Long, @PathVariable status: Int): ApiResponse<DishVO> {
         return ResponseUtil.success(dishService.updateDishStatus(id, status))
     }
 

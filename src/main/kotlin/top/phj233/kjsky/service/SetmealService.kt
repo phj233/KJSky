@@ -2,6 +2,8 @@ package top.phj233.kjsky.service
 
 import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -13,6 +15,7 @@ import top.phj233.kjsky.model.Setmeal
 import top.phj233.kjsky.model.dto.DishItemVO
 import top.phj233.kjsky.module.dto.SetmealDTO
 import top.phj233.kjsky.module.dto.SetmealPageQueryDTO
+import top.phj233.kjsky.module.dto.SetmealQueryDTO
 import top.phj233.kjsky.module.dto.SetmealVO
 import top.phj233.kjsky.repository.SetmealDishRepository
 import top.phj233.kjsky.repository.SetmealRepository
@@ -27,6 +30,8 @@ import top.phj233.kjsky.repository.SetmealRepository
 class SetmealService(
     val setmealRepository: SetmealRepository,
     val setmealDishRepository: SetmealDishRepository) {
+
+    val logger : Logger = LoggerFactory.getLogger(this::class.java)
     /**
      * 新增套餐
      * @param setmealDTO 套餐DTO
@@ -41,12 +46,13 @@ class SetmealService(
      * @param setmealPageQueryDTO 套餐分页查询DTO
      * @return Page<Setmeal> 分页查询结果
      */
-    fun pageQuery(setmealPageQueryDTO: SetmealPageQueryDTO): Page<Setmeal> {
+    fun pageQuery(setmealPageQueryDTO: SetmealPageQueryDTO): Page<SetmealVO> {
         return setmealRepository.findByNameLikeAndCategoryIdAndStatus(
             setmealPageQueryDTO.name,
             setmealPageQueryDTO.categoryId,
             setmealPageQueryDTO.status,
-            PageRequest.of(setmealPageQueryDTO.page, setmealPageQueryDTO.pageSize)
+            SetmealVO::class,
+            PageRequest.of(setmealPageQueryDTO.page, setmealPageQueryDTO.pageSize,)
         )
     }
 
@@ -86,8 +92,9 @@ class SetmealService(
     fun updateSetmealStatus(id: Long, status: Int): SetmealVO {
         //status 1 时还要再判断 菜品 status 是否 1
         if (status == StatusConstant.ENABLE){
-            setmealDishRepository.findBySetmealId(id).forEach {
-                if (it.dish?.status != StatusConstant.ENABLE) {
+            setmealDishRepository.findBySetmealId(id, DishItemVO::class).forEach {
+                logger.info("套餐菜品状态检查: ${it.status}")
+                if (it.status != StatusConstant.ENABLE) {
                     throw SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED)
                 }
             }
@@ -105,7 +112,7 @@ class SetmealService(
      * @param setmealQueryDTO 套餐查询DTO
      * @return List<SetmealVO> 套餐视图对象列表
      */
-    fun querySetmeal(setmealQueryDTO: SetmealPageQueryDTO): List<SetmealVO> {
+    fun querySetmeal(setmealQueryDTO: SetmealQueryDTO): List<SetmealVO> {
         return setmealRepository.findByNameLikeAndCategoryIdAndStatus(
             setmealQueryDTO.name,
             setmealQueryDTO.categoryId,
