@@ -9,6 +9,7 @@ import jakarta.websocket.server.ServerEndpoint
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import top.phj233.kjsky.common.ResponseUtil
 
 /**
  * WebSocket服务
@@ -54,10 +55,14 @@ class WebSocketServer {
      */
     fun sendToAllClient(message: String?) {
         val sessions: MutableCollection<Session?> = sessionMap.values
+        val data = hashMapOf(
+            "msg" to message,
+            "timestamp" to System.currentTimeMillis().toString(10)
+        )
         for (session in sessions) {
             try {
                 //服务器向客户端发送消息
-                session?.basicRemote?.sendText(message)
+                session?.asyncRemote?.sendObject(ResponseUtil.success(data))
             } catch (e: Exception) {
                 e.printStackTrace()
             }

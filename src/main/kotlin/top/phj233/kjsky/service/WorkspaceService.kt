@@ -55,8 +55,16 @@ class WorkspaceService(
         return BusinessDataVO(
             validOrderCount = validOrderCount,
             turnover = turnover,
-            orderCompletionRate = validOrderCount.toDouble() / orderCount,
-            unitPrice = turnover / validOrderCount,
+            orderCompletionRate = if (orderCount > 0) {
+                validOrderCount.toDouble() / orderCount
+            } else {
+                0.toDouble()
+            },
+            unitPrice = if (validOrderCount > 0) {
+                turnover / validOrderCount
+            } else {
+                0.toDouble()
+            },
             newUsers = newUserCount,
         )
     }
