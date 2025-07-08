@@ -1,6 +1,8 @@
 package top.phj233.kjsky.controller.user
 
+import cn.dev33.satoken.annotation.SaIgnore
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import top.phj233.kjsky.common.ApiResponse
@@ -25,7 +27,8 @@ class UserController(val userService: UserService) {
      * @return
      */
     @PostMapping("/login")
-    fun login(userLoginDTO: UserLoginDTO): ApiResponse<UserLoginVO> {
+    @SaIgnore
+    fun login(@RequestBody userLoginDTO: UserLoginDTO): ApiResponse<UserLoginVO> {
         return ResponseUtil.success(userService.wechatLogin(userLoginDTO))
     }
 

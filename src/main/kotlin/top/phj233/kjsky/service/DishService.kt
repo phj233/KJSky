@@ -32,10 +32,10 @@ import top.phj233.kjsky.repository.SetmealDishRepository
 class DishService(
     val dishRepository: DishRepository,
     val setmealDishRepository: SetmealDishRepository,
-    val stringRedisTemplate: StringRedisTemplate
+    val stringRedisTemplate: StringRedisTemplate,
+    val objectMapper: ObjectMapper
 ) {
     val log: Logger = LoggerFactory.getLogger(DishService::class.java)
-    val objectMapper = ObjectMapper()
     /**
      * 菜品分页查询
      * @param dishPageQueryDTO 菜品分页查询DTO

@@ -113,8 +113,7 @@ class SetmealService(
      * @return List<SetmealVO> 套餐视图对象列表
      */
     fun querySetmeal(setmealQueryDTO: SetmealQueryDTO): List<SetmealVO> {
-        return setmealRepository.findByNameLikeAndCategoryIdAndStatus(
-            setmealQueryDTO.name,
+        return setmealRepository.findByCategoryIdAndStatus(
             setmealQueryDTO.categoryId,
             setmealQueryDTO.status,
             SetmealVO::class

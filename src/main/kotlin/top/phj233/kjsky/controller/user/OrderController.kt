@@ -8,6 +8,7 @@ import top.phj233.kjsky.common.ResponseUtil
 import top.phj233.kjsky.common.constant.MessageConstant
 import top.phj233.kjsky.model.dto.*
 import top.phj233.kjsky.service.OrderService
+import java.time.LocalDateTime
 
 /**
  * 用户端/订单控制器
@@ -43,7 +44,7 @@ class OrderController(val orderService: OrderService) {
      * @param page 页码
      * @param pageSize 页大小
      * @param status 订单状态
-     * @return ApiResponse<Any>
+     * @return ApiResponse<Page<OrderVO>>
      */
     @GetMapping("/historyOrders")
     fun historyOrders(
@@ -100,5 +101,12 @@ class OrderController(val orderService: OrderService) {
     fun reminderOrder(@PathVariable id: Long): ApiResponse<String> {
         orderService.urgeOrder(id)
         return ResponseUtil.success(MessageConstant.SUCCESS)
+    }
+    /**
+     * 获取预计送达时间
+     */
+    @GetMapping("/getEstimatedDeliveryTime")
+    fun getEstimatedDeliveryTime(): ApiResponse<String> {
+        return ResponseUtil.success(LocalDateTime.now().plusMinutes(30).toString())
     }
 }

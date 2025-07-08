@@ -3,9 +3,9 @@ package top.phj233.kjsky.service
 import cn.dev33.satoken.stp.StpUtil
 import jakarta.servlet.ServletOutputStream
 import jakarta.servlet.http.HttpServletResponse
-import org.apache.poi.hssf.usermodel.HSSFRow
-import org.apache.poi.hssf.usermodel.HSSFSheet
-import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.xssf.usermodel.XSSFRow
+import org.apache.poi.xssf.usermodel.XSSFSheet
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -20,6 +20,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 /**
+ * 报告服务类
  * @author phj233
  * @since 2025/7/3 15:43
  * @version lazy
@@ -205,16 +206,16 @@ class ReportService(
         val `in` = this.javaClass.getClassLoader().getResourceAsStream("运营数据报表模板.xlsx")
         try {
             //基于模板文件创建一个新的Excel文件
-            val excel: HSSFWorkbook = HSSFWorkbook(`in`)
+            val excel = XSSFWorkbook(`in`)
 
             //获取表格文件的Sheet页
-            val sheet: HSSFSheet = excel.getSheet("Sheet1")
+            val sheet: XSSFSheet = excel.getSheet("Sheet1")
 
             //填充数据--时间
             sheet.getRow(1).getCell(1).setCellValue("时间：" + dateBegin + "至" + dateEnd)
 
             //获得第4行
-            var row: HSSFRow = sheet.getRow(3)
+            var row: XSSFRow = sheet.getRow(3)
             row.getCell(2).setCellValue(businessDataVO.turnover)
             row.getCell(4).setCellValue(businessDataVO.orderCompletionRate)
             row.getCell(6).setCellValue(businessDataVO.newUsers.toString())

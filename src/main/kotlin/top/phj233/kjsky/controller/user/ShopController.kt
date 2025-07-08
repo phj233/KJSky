@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import top.phj233.kjsky.common.ApiResponse
 import top.phj233.kjsky.common.ResponseUtil
+import top.phj233.kjsky.config.KJSkyProperties
 import top.phj233.kjsky.service.ShopService
 
 /**
@@ -24,6 +25,15 @@ class ShopController(val shopService: ShopService) {
     @GetMapping("/status")
     fun getStatus(): ApiResponse<Int> {
         return ResponseUtil.success(shopService.getStatus())
+    }
+
+    /**
+     * 获取店铺的信息
+     * @return ApiResponse<String>
+     */
+    @GetMapping("/getMerchantInfo")
+    fun getMerchantInfo(): ApiResponse<KJSkyProperties.ShopProperties> {
+        return ResponseUtil.success(shopService.getMerchantInfo())
     }
 
 }

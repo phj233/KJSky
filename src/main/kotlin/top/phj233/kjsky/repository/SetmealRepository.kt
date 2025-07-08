@@ -23,8 +23,7 @@ interface SetmealRepository: KRepository<Setmeal, Long> {
         @DynamicParam categoryId: Long?,
         @DynamicParam status: Int?,view: KClass<V>, of: PageRequest): Page<V>
 
-    fun <V: View<Setmeal>> findByNameLikeAndCategoryIdAndStatus(
-        @DynamicParam name: String?,
+    fun <V: View<Setmeal>> findByCategoryIdAndStatus(
         @DynamicParam categoryId: Long?,
         @DynamicParam status: Int?, view: KClass<V>): List<V>
 

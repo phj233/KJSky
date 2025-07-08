@@ -1,9 +1,12 @@
 package top.phj233.kjsky.service
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import top.phj233.kjsky.common.constant.MessageConstant
+import top.phj233.kjsky.common.constant.StatusConstant
 import top.phj233.kjsky.common.exception.BaseException
 import top.phj233.kjsky.common.exception.DeletionNotAllowedException
 import top.phj233.kjsky.model.Category
@@ -24,11 +27,14 @@ class CategoryService(
     val categoryRepository: CategoryRepository, repository: CategoryRepository,
     val dishRepository: DishRepository,
     val setmealRepository: SetmealRepository) {
+
+    val log: Logger = LoggerFactory.getLogger(this::class.java)
     /**
      * 新增分类
      * @param categoryDTO 分类DTO
      */
     fun saveCategory(categoryDTO: CategoryDTO): Category {
+        log.info("新增分类: $categoryDTO")
         categoryDTO.copy(status = 0).let {
             categoryRepository.save(it).let {category ->
                 return category
@@ -42,6 +48,7 @@ class CategoryService(
      * @return Page<Category> 分页查询结果
      */
     fun pageQuery(categoryPageQueryDTO: CategoryPageQueryDTO): Page<Category> {
+        log.info("分类分页查询: $categoryPageQueryDTO")
         return categoryRepository.findByNameLikeAndType(
             categoryPageQueryDTO.name,
             categoryPageQueryDTO.type,
@@ -54,6 +61,7 @@ class CategoryService(
      * @param id 分类ID
      */
     fun deleteCategory(id: Long) {
+        log.info("删除分类: id=$id")
         // 检查是否有菜品或套餐关联
         dishRepository.existsById(id).takeIf { it }?.let {
             throw DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH)}
@@ -67,6 +75,7 @@ class CategoryService(
      * @param categoryDTO 分类DTO
      */
     fun updateCategory(categoryDTO: CategoryDTO): Category {
+        log.info("更新分类: $categoryDTO")
         return categoryRepository.save(
             categoryDTO
         )
@@ -78,6 +87,7 @@ class CategoryService(
      * @param status 分类状态 1启用 0禁用
      */
     fun updateCategoryStatus(id: Long, status: Int): Category {
+        log.info("更新分类状态: id=$id, status=$status")
         return categoryRepository.updateCategoryStatusById(id, status).let {
             if (it == 0) {
                 throw BaseException(MessageConstant.CATEGORY_NOT_FOUND)
@@ -91,7 +101,8 @@ class CategoryService(
      * @param type 分类类型
      * @return List<Category> 分类列表
      */
-    fun findCategoryByType(type: Int): List<Category> {
-        return categoryRepository.findCategoriesByType(type)
+    fun findCategoryByType(type: Int?): List<Category> {
+        log.info("根据类型查询分类: type=$type")
+        return categoryRepository.findCategoriesByTypeAndStatus(type, StatusConstant.ENABLE)
     }
 }

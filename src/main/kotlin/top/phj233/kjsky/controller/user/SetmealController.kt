@@ -1,6 +1,5 @@
 package top.phj233.kjsky.controller.user
 
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,7 +27,7 @@ class SetmealController(val setmealService: SetmealService) {
      * @return ApiResponse<List<SetmealVO>>
      */
     @GetMapping("/list")
-    @Cacheable(cacheNames = ["setmealCache"], key = "#categoryId")
+//    @Cacheable(cacheNames = ["setmealCache"], key = "#categoryId")
     fun list(categoryId: Long): ApiResponse<List<SetmealVO>> {
         return ResponseUtil.success(
             setmealService.querySetmeal(

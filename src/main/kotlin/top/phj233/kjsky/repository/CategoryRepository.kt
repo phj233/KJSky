@@ -22,7 +22,10 @@ interface CategoryRepository: KRepository<Category, Long> {
         @DynamicParam name: String?,
         @DynamicParam type: Int?, of: PageRequest): Page<Category>
     fun findCategoryById(id: Long): Category
-    fun findCategoriesByType(type: Int?): List<Category>
+    fun findCategoriesByTypeAndStatus(
+        @DynamicParam type: Int?,
+        @DynamicParam status: Int?
+    ): List<Category>
     fun updateCategoryStatusById(id: Long, status: Int): Int = sql.createUpdate(Category::class){
         where(table.id eq id)
         set(table.status, status)

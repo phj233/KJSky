@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import top.phj233.kjsky.common.constant.StatusConstant
+import top.phj233.kjsky.config.KJSkyProperties
 import java.util.concurrent.TimeUnit
 
 /**
@@ -15,7 +16,9 @@ import java.util.concurrent.TimeUnit
  * @version
  */
 @Service
-class ShopService(val stringRedisTemplate: StringRedisTemplate) {
+class ShopService(
+    val stringRedisTemplate: StringRedisTemplate,
+    val kjskyProperties: KJSkyProperties) {
     val logger:Logger = LoggerFactory.getLogger(this::class.java)
     /**
      * 设置商店状态
@@ -25,7 +28,7 @@ class ShopService(val stringRedisTemplate: StringRedisTemplate) {
         logger.info("${StpUtil.getLoginIdAsLong()} 设置商店状态为: $status")
         stringRedisTemplate.opsForValue()
             .set(StatusConstant.SHOP_STATUS_KEY,
-                status.toString(),-1, TimeUnit.DAYS)
+                status.toString(),999, TimeUnit.DAYS)
         logger.info("商店状态已设置为: $status")
         return true
     }
@@ -37,6 +40,13 @@ class ShopService(val stringRedisTemplate: StringRedisTemplate) {
                 it?.toInt()
             } ?: StatusConstant.DISABLE
 
+    }
+
+    fun getMerchantInfo(): KJSkyProperties.ShopProperties {
+        kjskyProperties.shop.let {
+            logger.info("${StpUtil.getLoginIdAsLong()} 获取商户信息: $it")
+            return it
+        }
     }
 
 }

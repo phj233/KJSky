@@ -40,7 +40,8 @@ class OrderService(
     val shoppingCartRepository: ShoppingCartRepository,
     val weChatPayUtil: WeChatPayUtil,
     val webSocketServer: WebSocketServer,
-    val kjSkyProperties: KJSkyProperties
+    val kjSkyProperties: KJSkyProperties,
+    val objectMapper: ObjectMapper
 ) {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
     /**
@@ -79,15 +80,15 @@ class OrderService(
         shoppingCart.forEach { item ->
             val orderDetail = OrderDetail{
                 this.orderId = order.id
-                this.dishId = item.dishId!!
-                this.setmealId = item.setmealId!!
+                item.dishId?.let { this.dishId = it }
+                item.setmealId?.let { this.setmealId = it }
                 this.name = item.name
                 this.image = item.image
                 this.amount = item.amount
                 this.number = item.number
                 this.dishFlavor = item.dishFlavor
             }
-            orderDetailRepository.save(orderDetail)
+            orderDetailRepository.save(orderDetail, SaveMode.INSERT_ONLY)
         }
         // 5. 清空购物车
         shoppingCartRepository.deleteByUserId(orderUserId)
@@ -115,10 +116,20 @@ class OrderService(
          * 2.调用微信支付统一下单接口
          */
         val order = orderRepository.findByNumber(ordersPaymentDTO.orderNumber)
-        val res: JsonNode = ObjectMapper().readTree("fake response from WeChat Pay API")
-        res.get("code").equals("ORDERPAID").takeIf { it } ?: run {
-            throw OrderBusinessException("订单已支付")
-        }
+        val fakeResponse = """
+            {
+                "code": "ORDERPAID",
+                "nonce_str": "fake_nonce_str",
+                "prepay_id": "fake_prepay_id",
+                "time_stamp": "${System.currentTimeMillis()}",
+                "sign_type": "fake_sign_type",
+                "package": "fake_package"
+            }
+        """.trimIndent()
+        val res: JsonNode = objectMapper.readTree(fakeResponse)
+//        res.get("code").equals("ORDERPAID").takeIf { it } ?: run {
+//            throw OrderBusinessException("订单已支付")
+//        }
         logger.info("微信支付统一下单成功: $res")
         return OrderPaymentVO(
             nonceStr = res.get("nonce_str").asText() ?: "fake nonce str",
@@ -151,7 +162,7 @@ class OrderService(
                 "orderId" to this.id,
                 "content" to "订单号+$outTradeNo"
             ).let { webSocketServer.sendToAllClient(
-                ObjectMapper().writeValueAsString(it)
+                objectMapper.writeValueAsString(it)
             ) }
         }
         return true
@@ -403,7 +414,7 @@ class OrderService(
             "type" to 2,
             "orderId" to id,
             "content" to "订单号+${order.number}"
-        ).let { webSocketServer.sendToAllClient(ObjectMapper().writeValueAsString(it)) }
+        ).let { webSocketServer.sendToAllClient(objectMapper.writeValueAsString(it)) }
         return true
     }
 
@@ -420,7 +431,7 @@ class OrderService(
         //获取店铺的经纬度坐标
         val shopCoordinate: String? = HttpUtil.get("https://api.map.baidu.com/geocoding/v3", map)
         //使用jackson将字符串转换为JSON对象
-        var jsonObject = ObjectMapper().readTree(shopCoordinate)
+        var jsonObject = objectMapper.readTree(shopCoordinate)
         jsonObject.get("status").equals("0").takeIf { it } ?: run {
             throw OrderBusinessException("店铺地址解析失败")
         }
@@ -435,7 +446,7 @@ class OrderService(
         //获取用户收货地址的经纬度坐标
         val userCoordinate: String? =  HttpUtil.get("https://api.map.baidu.com/geocoding/v3", map)
 
-        jsonObject = ObjectMapper().readTree(userCoordinate)
+        jsonObject = objectMapper.readTree(userCoordinate)
         jsonObject.get("status").equals("0").takeIf { it } ?: run {
             throw OrderBusinessException("用户地址解析失败")
         }
@@ -451,7 +462,7 @@ class OrderService(
         //路线规划
         val json: String? = HttpUtil.get("https://api.map.baidu.com/directionlite/v1/driving", map)
 
-        jsonObject = ObjectMapper().readTree(json)
+        jsonObject = objectMapper.readTree(json)
         jsonObject.get("status").equals("0").takeIf { it } ?: run {
             throw OrderBusinessException("路线规划失败")
         }

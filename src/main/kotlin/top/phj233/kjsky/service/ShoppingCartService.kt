@@ -38,7 +38,7 @@ class ShoppingCartService(
             shoppingCartDTO.dishFlavor
         ).let { existingCart ->
             logger.info("查询到的购物车: $existingCart")
-            if (existingCart != null) { // 如果购物车已存在，则增加数量
+            if (!existingCart.isNullOrEmpty()) { // 如果购物车已存在，则增加数量
                 shoppingCartRepository.save(
                     existingCart[0].copy {
                         number += 1
@@ -51,17 +51,19 @@ class ShoppingCartService(
                             this.image = dish.image
                             this.name = dish.name
                             this.amount = dish.price
+                            this.userId = StpUtil.getLoginIdAsLong()
                             this.dishId = shoppingCartDTO.dishId
                             this.dishFlavor = shoppingCartDTO.dishFlavor
                         } else if (shoppingCartDTO.setmealId != null) {
                             val setmeal = setmealRepository.findSetmealById(shoppingCartDTO.setmealId)
                             this.image = setmeal.image
                             this.name = setmeal.name
+                            this.userId = StpUtil.getLoginIdAsLong()
                             this.amount = setmeal.price
                             this.setmealId = shoppingCartDTO.setmealId
                         }
                         this.number = 1
-                    })
+                    }, SaveMode.INSERT_ONLY)
             }
         }
         return true
