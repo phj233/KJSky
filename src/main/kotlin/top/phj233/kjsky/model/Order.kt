@@ -8,7 +8,7 @@ import java.time.LocalDateTime
  * 订单表
  */
 @Entity
-@Table(name = "orders")
+@Table(name = "`orders`")
 interface Order {
 
     /**

@@ -9,6 +9,7 @@ UserReportVO {
 
 input UserLoginDTO{
     code:String
+    location:String?
 }
 
 UserLoginVO{

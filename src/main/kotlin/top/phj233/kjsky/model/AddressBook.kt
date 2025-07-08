@@ -81,6 +81,7 @@ interface AddressBook {
     /**
      * 默认 0 否 1是
      */
+    @Column(name = "`default`",sqlType = "TINYINT(1)")
     val default: Boolean
 
     @ManyToOne

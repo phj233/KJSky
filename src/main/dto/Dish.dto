@@ -1,6 +1,6 @@
 export top.phj233.kjsky.model.Dish
     -> package top.phj233.kjsky.module.dto
-
+import org.springframework.format.annotation.DateTimeFormat
 
 specification DishPageQueryDTO{
     name
@@ -40,6 +40,10 @@ DishVO{
     flavors{
         #allScalars
     }
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    createTime
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    updateTime
 }
 DishOverViewVO {
     sold: Int

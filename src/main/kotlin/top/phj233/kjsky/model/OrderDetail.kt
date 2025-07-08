@@ -7,7 +7,7 @@ import java.math.BigDecimal
  * 订单明细表
  */
 @Entity
-@Table(name = "order_detail")
+@Table(name = "`order_detail`")
 interface OrderDetail {
 
     /**
@@ -45,7 +45,7 @@ interface OrderDetail {
      * 套餐id
      */
     @IdView
-    val setmealId: Long
+    val setmealId: Long?
 
     /**
      * 口味
@@ -78,7 +78,7 @@ interface OrderDetail {
      * 套餐
      */
     @ManyToOne
-    val setmeal: Setmeal
+    val setmeal: Setmeal?
 
 }
 

@@ -1,6 +1,7 @@
 package top.phj233.kjsky.model
 
 import org.babyfish.jimmer.sql.MappedSuperclass
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
 /**
@@ -15,11 +16,13 @@ interface ModelBase {
     /**
      * 创建时间
      */
+    @get:DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val createTime: LocalDateTime?
 
     /**
      * 更新时间
      */
+    @get:DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val updateTime: LocalDateTime?
 
     /**

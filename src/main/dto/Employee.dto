@@ -1,11 +1,17 @@
 export top.phj233.kjsky.model.Employee
     -> package top.phj233.kjsky.model.dto
+import jakarta.validation.constraints.Size
+import jakarta.validation.constraints.NotBlank
 
 input EmployeeDTO {
     dynamic id
+    @NotBlank(message = "姓名不能为空")
     name
+    @Size(min = 3, max = 20, message = "用户名长度必须在3到20之间")
     username
+    @NotBlank(message = "密码不能为空")
     password?
+    @Size(min = 11, max = 11, message = "手机号长度必须为11位")
     phone
     sex
     idNumber
@@ -13,7 +19,9 @@ input EmployeeDTO {
 
 
 input EmployeeLoginDTO {
+    @Size(min = 3, max = 20, message = "用户名长度必须在3到20之间")
     username
+    @NotBlank(message = "密码不能为空")
     password
 }
 

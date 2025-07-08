@@ -17,4 +17,8 @@ input CategoryDTO {
     dynamic status
 }
 
+specification CategoryUserListDTO{
+    type
+}
+
 
