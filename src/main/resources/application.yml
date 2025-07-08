@@ -15,11 +15,14 @@ spring:
       connect-timeout: 3000
       timeout: 3000
       host: home.phj233.top
+  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+08
 
 sa-token:
   jwt-secret-key: kjskyPhj233
   is-color-log: true
-  timeout: 6048000
+  timeout: 604800
   token-name: token
 jimmer:
   language: kotlin
@@ -33,5 +36,6 @@ kjsky:
     bucket-name: kjsky
   we-chat:
     appid: wx66821814e2806052
-    secret: b0dc03f770685a76e25d619df76e012e
+    secret: fd29ebe30823c3dfb34a3c2e2425ec19
+
 

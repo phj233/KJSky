@@ -110,7 +110,11 @@ data class KJSkyProperties(
         /**
          * 店铺营业时间
          */
-        var businessHours: String? = "09:00-21:00"
+        var businessHours: String? = "09:00-21:00",
+        /**
+         * 配送费
+         */
+        var deliveryFee: Double = 3.0,
     )
 
 

@@ -49,7 +49,10 @@ dependencies {
     implementation("io.minio:minio:8.5.17")
     // pio
     implementation("org.apache.poi:poi:5.4.1")
+    implementation("org.apache.poi:poi-ooxml:5.4.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // 解决Jackson 处理Java 8的LocalDateTime序列化问题
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

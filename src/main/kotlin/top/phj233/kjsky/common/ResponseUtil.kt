@@ -2,12 +2,17 @@ package top.phj233.kjsky.common
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import java.io.Serializable
 
 data class ApiResponse<T>(
     val code: Int,
     val msg: String,
     val data: T?
-)
+): Serializable {
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
+}
 object ResponseUtil {
 
     /**

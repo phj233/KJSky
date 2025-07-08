@@ -32,6 +32,7 @@ class SaTokenConfigure : WebMvcConfigurer{
         registry.addInterceptor(SaInterceptor{
             SaRouter.match("/**").notMatch(
                 "/admin/employee/login",
+                "/user/user/login",
                 "/openapi.html",
                 "/openapi.yml",
                 "/ts.zip")
