@@ -1,6 +1,8 @@
 
 # KJSky 餐饮点餐系统
-苍穹外卖 Kotlin Jimmer Sa-Token 虫豸版 
+苍穹外卖 Kotlin Jimmer Sa-Token ~~虫豸版~~
+由于替换了原来的 Mybatis 为 Jimmer 所以用不到 PageHelper ，而是 SpringData 的分页，分页查询返回的数据为content，总数是totalElements，不是原来的records和total。
+前端和小程序记得做些许改变。
 ## 项目简介
 KJSky 是一个基于 Spring Boot 和 Kotlin 构建的餐饮点餐系统，旨在为餐饮企业提供高效的数字化解决方案。该项目集成了微信小程序、WebSocket 实时通信、MinIO 文件存储、微信支付等功能，支持用户在线点餐、订单管理、菜品管理、数据统计等核心业务流程。
 
