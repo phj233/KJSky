@@ -39,7 +39,7 @@ interface OrderDetail {
      * 菜品id
      */
     @IdView
-    val dishId: Long
+    val dishId: Long?
 
     /**
      * 套餐id
@@ -72,7 +72,7 @@ interface OrderDetail {
      * 菜品
      */
     @ManyToOne
-    val dish: Dish
+    val dish: Dish?
 
     /**
      * 套餐

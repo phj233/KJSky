@@ -182,7 +182,7 @@ class ReportService(
         )
         logger.info("销量前10统计数据：$data")
         return SalesTop10ReportVO(
-            nameList = data.joinToString(separator = ",") { it.name },
+            nameList = data.joinToString(separator = ",") { it.name.toString() },
             numberList = data.joinToString(separator = ",") { it.number.toString() }
         )
     }

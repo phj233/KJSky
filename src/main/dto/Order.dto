@@ -9,13 +9,13 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import java.math.BigDecimal
 
 input GoodsSalesDTO {
-    name: String
-    number: Int
+    name: String?
+    number: Int?
 }
 
 input OrdersConfirmDTO {
     id
-    status
+    status?
 }
 
 input OrdersDTO {

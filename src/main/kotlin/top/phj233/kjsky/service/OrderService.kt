@@ -123,7 +123,7 @@ class OrderService(
                 "prepay_id": "fake_prepay_id",
                 "time_stamp": "${System.currentTimeMillis()}",
                 "sign_type": "fake_sign_type",
-                "package": "fake_package"
+                "package": "prepay_id=MOCK_PREPAY_ID"
             }
         """.trimIndent()
         val res: JsonNode = objectMapper.readTree(fakeResponse)
@@ -158,7 +158,7 @@ class OrderService(
             orderRepository.save(this)
             // 3. 通过websocket向客户端浏览器推送消息 type orderId content
             hashMapOf(
-                "type" to "order",
+                "type" to "1",
                 "orderId" to this.id,
                 "content" to "订单号+$outTradeNo"
             ).let { webSocketServer.sendToAllClient(
@@ -291,8 +291,8 @@ class OrderService(
         val confirmed = orderRepository.countByStatusEquals(StatusConstant.CONFIRMED)
         val deliveryInProgress = orderRepository.countByStatusEquals(StatusConstant.DELIVERY_IN_PROGRESS)
         return OrderStatisticsVO(
-            confirmed = toBeConfirmed,
-            toBeConfirmed = confirmed,
+            confirmed = confirmed,
+            toBeConfirmed = toBeConfirmed,
             deliveryInProgress = deliveryInProgress,
         )
     }

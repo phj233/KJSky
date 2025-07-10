@@ -6,11 +6,13 @@ import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.ast.LikeMode
 import org.babyfish.jimmer.sql.kt.ast.expression.*
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import top.phj233.kjsky.common.constant.StatusConstant
 import top.phj233.kjsky.model.*
 import top.phj233.kjsky.model.dto.GoodsSalesDTO
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
@@ -112,9 +114,19 @@ interface OrderRepository: KRepository<Order, Long> {
         orderBy(amount.desc())
         select(name,amount)
     }.execute().map {
+        val logger = LoggerFactory.getLogger(OrderRepository::class.java)
+        logger.info("获取到的商品销售数据: $it")
         GoodsSalesDTO(
-            name = it[0] as String,
-            number = (it[1] as Number).toInt()
+            name = it[0].let { it ->
+                it.takeIf { it!=null }.let { name ->
+                    name as? String
+                }
+            },
+            number = it[1].let { it ->
+                it.takeIf { it!=null }.let { amount ->
+                    amount as? BigDecimal
+                }?.toInt()
+            }
         )
     }
 
