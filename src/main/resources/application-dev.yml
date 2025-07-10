@@ -1,0 +1,8 @@
+kjsky:
+  minio:
+    access-key: nGqqe7ceK5f3EQrZnpuK
+    secret-key: 0CPNyzhhHtlM91LIv16pz3wVSyORvITDivjubQNH
+    bucket-name: kjsky
+  we-chat:
+    appid: wx66821814e2806052
+    secret: fd29ebe30823c3dfb34a3c2e2425ec19
